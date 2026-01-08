@@ -25,4 +25,9 @@ public class BlogService {
     public Article addArticle(Article article){
         return blogRepo.save(article);
     }
+
+    public void deleteArticle(int id)
+    {
+        blogRepo.deleteById(id);
+    }
 }
