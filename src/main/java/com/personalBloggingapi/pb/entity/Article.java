@@ -1,66 +1,39 @@
 package com.personalBloggingapi.pb.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
+
+@Data
 @Entity
+@Getter
+@Table(name = "article")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, length = 150)
     private String title;
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+    @Column(nullable = false, length = 100)
     private String author;
     private String tag;
-    private Date publishedDate;
-    private String status;
-    private Date createdAt;
-    private Date updatedBy;
+    private LocalDateTime publishedDate;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ArticleStatus status;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedBy;
 
-
-    public Article() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public Date getPublishedDate() {
-        return publishedDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getUpdatedBy() {
-        return updatedBy;
-    }
 }

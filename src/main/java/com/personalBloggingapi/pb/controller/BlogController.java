@@ -1,45 +1,48 @@
 package com.personalBloggingapi.pb.controller;
 
-import com.personalBloggingapi.pb.entity.Article;
+import com.personalBloggingapi.pb.dto.ArticleRequest;
+import com.personalBloggingapi.pb.dto.ArticleResponse;
 import com.personalBloggingapi.pb.service.BlogService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("blog/api")
+@RequestMapping("api/v1/articles")
+@RequiredArgsConstructor
 public class BlogController {
 
-    @Autowired
-    private BlogService blogService;
 
-    @GetMapping("/allblog")
-    public ResponseEntity<List<Article>> getAllBlog(){
-        return ResponseEntity.ok(blogService.getAllArticles());
+    private final BlogService blogService;
+
+    @PostMapping
+    public ResponseEntity<ArticleResponse> create(@Valid @RequestBody ArticleRequest articleRequest){
+        return ResponseEntity.status(HttpStatus.CREATED).body(blogService.createArticle(articleRequest));
     }
 
-    @GetMapping("/allblog/{id}")
-    public ResponseEntity<Optional<Article>> getBlogById(@PathVariable int id){
+    @GetMapping("/{id}")
+    public ResponseEntity<ArticleResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(blogService.getArticleById(id));
     }
 
-    @PostMapping("/allblog/new")
-    public ResponseEntity<String> addBlogById(@RequestBody Article article) throws Exception {
-
-        Article article1 = blogService.addArticle(article);
-        if(article1 == null){
-            throw new Exception("NO data found");
-        }
-        return ResponseEntity.ok("Success");
+    @GetMapping
+    public ResponseEntity<List<ArticleResponse>> getAllArticles(){
+        return ResponseEntity.ok(blogService.getAllArticles());
     }
 
-    @DeleteMapping("/allblog/delete/{id}")
-    public ResponseEntity<String> deleteBlogById(@PathVariable int id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
         blogService.deleteArticle(id);
-
-        return ResponseEntity.ok("Success");
+        return ResponseEntity.noContent().build();
     }
+
+
+
+
 }
+
+
